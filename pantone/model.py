@@ -3,16 +3,6 @@ import cv2
 import numpy as np
 from sklearn.cluster import KMeans
 
-"""
-class colorIdentifier:
-
-    def __init__(self, ):
-        self.clase =
-        self.image =
-        self.color =
-        self.box =
-"""
-
 
 def get_objs_ROI(objetos, frame):
     """Get objects ROI
@@ -120,12 +110,10 @@ def get_color_HSV(hs):
     print("HSV value ", hsv_value)
 
     color_name = get_colorname(hsv_value)
-    print("color name ", color_name)
+    #print("color name ", color_name)
 
     """
     rgb_value = cv2.cvtColor(np.uint8([[[row_ind, col_ind, 255]]]),cv2.COLOR_HSV2BGR)
-
-    print("rgb value ", rgb_value)
 
     w = x2 - x1
     h = y2 - y1
@@ -141,11 +129,16 @@ def get_color_HSV(hs):
 def identify_color(frame, is_drawing=False):
     """Identify color
 
-    The predominant color in HSV colorspace is obtained
+    The predominant color in HSV colorspace of a single image is obtained
     and the colorname too
     Then that value is converted into rgb colorspace
     Finally, the object detected is enclosed in a rectangle with
     the color detected and the colorname is displayed in the image
+    INPUT:
+        frame:          the frame to detect the images
+        is_drawing:     flag that if true, put text on the image to display
+    OUTPUT:
+        color_name:     the color detected (string)
     """
     font = cv2.FONT_HERSHEY_SIMPLEX
     fontScale = 1
@@ -161,14 +154,9 @@ def identify_color(frame, is_drawing=False):
             hs.append([temp_h, temp_s])
 
     hsv_color, color_name = get_color_HSV(hs)
-    print("color name inside ", color_name)
-    # cv2.imshow("frame", frame)
-    # cv2.waitKey(0)
+
     rgb_value = cv2.cvtColor(np.uint8([[hsv_color]]), cv2.COLOR_HSV2BGR)
     # print("rgb value ", rgb_value)
-    # x1, y1, x2, y2 = boxes[i]
-    # w = x2 - x1
-    # h = y2 - y1
     rgb_value = (
         int(rgb_value[0][0][0]),
         int(rgb_value[0][0][1]),
@@ -176,10 +164,7 @@ def identify_color(frame, is_drawing=False):
     )
 
     if is_drawing:
-        # cv2.rectangle(objetos["image"], (x1, y1), (x1 + w, y1 + h), rgb_value, 3)
-        x1 = 50
-        y1 = 50
-        org = (x1 - 5, y1 - 5)
+        org = (50, 50)
         cv2.putText(
             frame,
             color_name,
@@ -191,9 +176,7 @@ def identify_color(frame, is_drawing=False):
             cv2.LINE_AA,
         )
 
-    # colors_list.append(color_name)
-    print("color name ", color_name)
-    return color_name  # boxes, clases_list, colors_list
+    return color_name
 
 
 def identify_colors(frame, objetos, is_drawing=False):
@@ -229,7 +212,6 @@ def identify_colors(frame, objetos, is_drawing=False):
                 hs.append([temp_h, temp_s])
 
         # for i, ROI_frame in enumerate(ROI_frames):
-        # print("getting color from ROI")
         hsv_color, color_name = get_color_HSV(hs)  # ROI_frame)
         if color_name != "amarillo":
             cv2.imshow("roi", ROI_frame)
